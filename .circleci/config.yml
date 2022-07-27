@@ -14,42 +14,42 @@ jobs:
   #     - checkout # check out the code in the project directory
   #     - run: echo "hello world" # run the `echo` command
 
-  create_infrastructure:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Create Cloudformation Stack
-          command: |
-            aws cloudformation deploy \
-              --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
-              --region us-east-1
-
-    # Exercise: Config and Deployment
-  # configure_infrastructure:
+  # create_infrastructure:
   #   docker:
-  #     - image: python:3.7-alpine3.11
+  #     - image: amazon/aws-cli
   #   steps:
   #     - checkout
-  #     - add_ssh_keys:
-  #         fingerprints: ["2e:d9:1b:6a:4b:bf:c7:b0:13:26:b5:f3:aa:a9:81:3f"] # You can get this ID in the section where you registered the SSH Key
   #     - run:
-  #         name: Install dependencies
+  #         name: Create Cloudformation Stack
   #         command: |
-  #           # install the dependencies needed for your playbook
-  #           apk add --update ansible
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           ansible-playbook -i inventory.txt main.yml
+  #           aws cloudformation deploy \
+  #             --template-file template.yml \
+  #             --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
+  #             --region us-east-1
+
+  # Exercise: Config and Deployment
+  configure_infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["2e:d9:1b:6a:4b:bf:c7:b0:13:26:b5:f3:aa:a9:81:3f"] # You can get this ID in the section where you registered the SSH Key
+      - run:
+          name: Install dependencies
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i inventory.txt main.yml
 # Sequential workflow
 workflows:
   # Name the workflow
   myWorkflow:
     jobs:
-      - create_infrastructure
-      # - configure_infrastructure
+      # - create_infrastructure
+      - configure_infrastructure
       # - myjob1
       # - myjob2

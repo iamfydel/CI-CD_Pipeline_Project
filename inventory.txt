@@ -1,2 +1,2 @@
 [all]
-18.234.199.28
+ec2-18-234-199-28.compute-1.amazonaws.com
